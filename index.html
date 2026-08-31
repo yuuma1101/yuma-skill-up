@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yuma Skill Up</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #f5f6f8; color: #202124;
+  }
+  .app { max-width: 720px; margin: 0 auto; min-height: 100vh; padding-bottom: 88px; }
+  header { padding: 28px 20px 16px; background: white; position: sticky; top: 0; z-index: 5; border-bottom: 1px solid #eee; }
+  header h1 { margin: 0 0 6px; font-size: 25px; }
+  header p { margin: 0; color: #666; font-size: 14px; }
+  main { padding: 18px; }
+  .card {
+    background: white; border-radius: 18px; padding: 18px; margin-bottom: 14px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.05);
+  }
+  .hero { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  .score { font-size: 34px; font-weight: 800; }
+  .muted { color: #777; font-size: 13px; }
+  .progress { height: 10px; background: #eee; border-radius: 99px; overflow: hidden; margin-top: 12px; }
+  .bar { height: 100%; width: 0%; background: #222; transition: width .25s; }
+  .task { display:flex; align-items:center; gap:12px; padding:13px 0; border-bottom:1px solid #eee; }
+  .task:last-child { border-bottom:0; }
+  .task input { width:20px; height:20px; }
+  .task.done span { text-decoration: line-through; color:#999; }
+  .tag { display:inline-block; padding:5px 9px; border-radius:99px; background:#eee; font-size:12px; margin-right:5px; }
+  .nav {
+    position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,.96);
+    border-top: 1px solid #ddd; display:flex; justify-content:center; z-index:10;
+  }
+  .nav button { border:0; background:none; padding:12px 15px 10px; font-size:11px; color:#666; }
+  .nav button.active { color:#111; font-weight:700; }
+  .nav .icon { display:block; font-size:20px; margin-bottom:2px; }
+  .page { display:none; }
+  .page.active { display:block; }
+  button.primary {
+    border:0; border-radius:12px; padding:11px 15px; background:#222; color:white;
+    font-weight:700; cursor:pointer;
+  }
+  .mini-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .mini { background:#f7f7f7; border-radius:14px; padding:14px; }
+  .mini strong { display:block; font-size:22px; margin-top:5px; }
+  ul { padding-left:20px; line-height:1.8; }
+  .notice { background:#f0f0f0; border-radius:12px; padding:12px; font-size:13px; line-height:1.6; }
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <h1>🚀 Yuma Skill Up</h1>
+  <p id="dateText"></p>
+</header>
+
+<main>
+  <section id="home" class="page active">
+    <div class="card hero">
+      <div>
+        <div class="muted">今日の達成度</div>
+        <div class="score" id="scoreText">0 / 3</div>
+        <div class="progress"><div class="bar" id="progressBar"></div></div>
+      </div>
+      <div style="font-size:42px">🔥</div>
+    </div>
+
+    <div class="card">
+      <h2>今日の学習</h2>
+      <div id="todayTasks"></div>
+    </div>
+
+    <div class="card">
+      <h2>進捗</h2>
+      <div class="mini-grid">
+        <div class="mini">連続学習<strong id="streak">0日</strong></div>
+        <div class="mini">開始から<strong id="days">0日</strong></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="notice">
+        💡 このアプリは「完成品を使う」だけでなく、これから一緒に改良していく教材です。
+        ボタン・画面・記録方法など、欲しい機能が出たら追加していこう。
+      </div>
+    </div>
+  </section>
+
+  <section id="programming" class="page">
+    <div class="card">
+      <h2>💻 プログラミング</h2>
+      <p>最初はHTML / CSS / JavaScriptから。ゲーム制作を通して覚える。</p>
+      <span class="tag">JavaScript</span><span class="tag">Web</span><span class="tag">ゲーム</span>
+    </div>
+    <div class="card">
+      <h3>最初の30日</h3>
+      <ul>
+        <li>1日目：開発環境を準備する</li>
+        <li>2日目：HTMLの基本</li>
+        <li>3日目：CSSの基本</li>
+        <li>4日目：JavaScriptの基本</li>
+        <li>5日目：変数と計算</li>
+        <li>6日目：条件分岐</li>
+        <li>7日目：復習</li>
+        <li>8〜14日目：クリックゲーム</li>
+        <li>15〜21日目：動くゲームへ発展</li>
+        <li>22〜30日目：自分でルールを追加</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="game" class="page">
+    <div class="card">
+      <h2>🎮 ゲーム制作</h2>
+      <h3>現在のプロジェクト</h3>
+      <p><strong>10秒クリックゲーム</strong></p>
+      <p class="muted">10秒間で何回クリックできるか競うゲーム。</p>
+      <button class="primary" onclick="alert('次の学習で一緒に作ろう！')">制作を開始</button>
+    </div>
+    <div class="card">
+      <h3>発展ロードマップ</h3>
+      <ul>
+        <li>① クリックゲーム</li>
+        <li>② ランダム位置ゲーム</li>
+        <li>③ プレイヤーを動かす</li>
+        <li>④ 敵を追加する</li>
+        <li>⑤ ステージを作る</li>
+        <li>⑥ オリジナルゲーム</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="mechanical" class="page">
+    <div class="card">
+      <h2>⚙️ 機械設計</h2>
+      <p>現在の仕事・学校で身につけている知識を継続して伸ばす。</p>
+      <ul>
+        <li>製図・図面読解</li>
+        <li>CAD</li>
+        <li>機械要素</li>
+        <li>材料・加工</li>
+        <li>設計の考え方</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="notice">将来的には「機械設計 × CAD × プログラミング × AI」の作品も作っていく。</div>
+    </div>
+  </section>
+
+  <section id="progress" class="page">
+    <div class="card">
+      <h2>📊 進捗</h2>
+      <div class="mini-grid">
+        <div class="mini">今日<strong id="pToday">0%</strong></div>
+        <div class="mini">累計<strong id="pTotal">0回</strong></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🎯 6か月の目標</h3>
+      <ul>
+        <li>JavaScriptの基礎を理解する</li>
+        <li>小さなゲームを複数完成させる</li>
+        <li>自分でWebアプリを改良できるようになる</li>
+        <li>Git / GitHubの使い方を覚える</li>
+        <li>次の言語（Python / C#など）にも触れる</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<nav class="nav">
+  <button class="active" onclick="showPage('home',this)"><span class="icon">🏠</span>ホーム</button>
+  <button onclick="showPage('programming',this)"><span class="icon">💻</span>プログラミング</button>
+  <button onclick="showPage('game',this)"><span class="icon">🎮</span>ゲーム</button>
+  <button onclick="showPage('mechanical',this)"><span class="icon">⚙️</span>機械設計</button>
+  <button onclick="showPage('progress',this)"><span class="icon">📊</span>進捗</button>
+</nav>
+</div>
+
+<script>
+const START = new Date("2026-09-01T00:00:00");
+const TASKS = [
+  {id:"programming", label:"💻 プログラミング", desc:"20分：JavaScript / Web学習"},
+  {id:"game", label:"🎮 ゲーム制作", desc:"30分：制作プロジェクト"},
+  {id:"mechanical", label:"⚙️ 機械設計", desc:"20分：図面・CADなど"}
+];
+
+function key() {
+  const d = new Date();
+  return "tasks-" + d.toISOString().slice(0,10);
+}
+function getState() {
+  try { return JSON.parse(localStorage.getItem(key())) || {}; } catch(e) { return {}; }
+}
+function saveState(s) { localStorage.setItem(key(), JSON.stringify(s)); }
+
+function render() {
+  const state = getState();
+  const box = document.getElementById("todayTasks");
+  box.innerHTML = "";
+  let done = 0;
+  TASKS.forEach(t => {
+    const checked = !!state[t.id];
+    if (checked) done++;
+    const div = document.createElement("label");
+    div.className = "task" + (checked ? " done" : "");
+    div.innerHTML = `<input type="checkbox" ${checked ? "checked" : ""}>
+      <div><span><strong>${t.label}</strong></span><div class="muted">${t.desc}</div></div>`;
+    div.querySelector("input").addEventListener("change", e => {
+      state[t.id] = e.target.checked;
+      saveState(state);
+      render();
+    });
+    box.appendChild(div);
+  });
+  document.getElementById("scoreText").textContent = `${done} / ${TASKS.length}`;
+  document.getElementById("progressBar").style.width = `${done / TASKS.length * 100}%`;
+  document.getElementById("pToday").textContent = `${Math.round(done / TASKS.length * 100)}%`;
+
+  let total = 0;
+  let d = new Date(START);
+  const today = new Date();
+  while (d <= today) {
+    const k = "tasks-" + d.toISOString().slice(0,10);
+    try {
+      const s = JSON.parse(localStorage.getItem(k)) || {};
+      if (Object.values(s).some(Boolean)) total++;
+    } catch(e) {}
+    d.setDate(d.getDate()+1);
+  }
+  document.getElementById("pTotal").textContent = `${total}回`;
+  document.getElementById("days").textContent = Math.max(0, Math.floor((today-START)/86400000)+1) + "日";
+  document.getElementById("streak").textContent = calcStreak() + "日";
+}
+
+function calcStreak() {
+  let count = 0;
+  const d = new Date();
+  while (true) {
+    const k = "tasks-" + d.toISOString().slice(0,10);
+    let s = {};
+    try { s = JSON.parse(localStorage.getItem(k)) || {}; } catch(e) {}
+    if (!Object.values(s).some(Boolean)) break;
+    count++;
+    d.setDate(d.getDate()-1);
+  }
+  return count;
+}
+
+function showPage(id, btn) {
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  document.querySelectorAll(".nav button").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  window.scrollTo(0,0);
+}
+
+document.getElementById("dateText").textContent =
+  new Intl.DateTimeFormat("ja-JP", {year:"numeric", month:"long", day:"numeric", weekday:"long"}).format(new Date());
+
+render();
+</script>
+</body>
+</html>

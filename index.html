@@ -14,4 +14,30 @@ const SESSIONS=[{"id":1,"phase":"学ぶ","title":"HTMLで画面の骨組み","go
   const previous=window.openSession;
   window.openSession=function(i){previous(i);setTimeout(mount,0)};
 })();
+</script><script>
+(()=>{
+  const target=document.getElementById('dash');
+  if(!target)return;
+  target.insertAdjacentHTML('beforeend','<div class="card" id="progressTransfer"><h2>📲 進捗をPC・スマホで引き継ぐ</h2><p>完了状況・メモ・制作ログをファイルにして、もう一方の端末で読み込めます。</p><div class="actions"><button class="sub" id="exportProgress">進捗を書き出す</button><button class="sub" id="importProgress">進捗を読み込む</button></div><input id="progressFile" type="file" accept="application/json,.json" class="hide"><p class="muted">書き出したJSONファイルをAirDrop、メール、クラウドなどで渡してから、もう一方の端末で読み込んでください。</p></div>');
+  const read=()=>{try{return JSON.parse(localStorage.getItem('yumaSkillUp_v3')||'{}')}catch(e){return {}}};
+  document.getElementById('exportProgress').addEventListener('click',()=>{
+    const data={app:'Yuma Skill Up',exportedAt:new Date().toISOString(),state:read()};
+    const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=url;a.download='Yuma_Skill_Up_progress.json';a.click();
+    setTimeout(()=>URL.revokeObjectURL(url),1000);
+  });
+  document.getElementById('importProgress').addEventListener('click',()=>document.getElementById('progressFile').click());
+  document.getElementById('progressFile').addEventListener('change',ev=>{
+    const file=ev.target.files[0];if(!file)return;
+    const reader=new FileReader();
+    reader.onload=()=>{try{
+      const data=JSON.parse(reader.result);
+      if(data.app!=='Yuma Skill Up'||!data.state||typeof data.state!=='object')throw new Error('wrong file');
+      if(!confirm('この端末の進捗を、読み込んだ進捗で置き換えます。よろしいですか？'))return;
+      localStorage.setItem('yumaSkillUp_v3',JSON.stringify(data.state));location.reload();
+    }catch(e){alert('このアプリの進捗ファイルを選んでください。')}};
+    reader.readAsText(file);
+  });
+})();
 </script></body></html>
